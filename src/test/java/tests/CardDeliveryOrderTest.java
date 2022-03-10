@@ -4,6 +4,7 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import com.github.javafaker.Faker;
 import data.CardInfo;
+import data.DateGenerator;
 import data.RegistrationInfo;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -21,23 +22,14 @@ import static com.codeborne.selenide.Selenide.open;
 
 public class CardDeliveryOrderTest {
 
-    private static Faker faker;
-
-    @BeforeAll
-    static void SetUpAll(){
-        faker = new Faker(new Locale("ru"));
-    }
-
-    String generateDate(int days) {
-        return LocalDate.now().plusDays(days).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-    }
+    DateGenerator dateGenerator = new DateGenerator();
 
     @Test
     void shouldGenerateInfo(){
         CardInfo cardInfo = RegistrationInfo.Registration.generateInfo("ru");
         open("http://localhost:9999");
         $("[data-test-id=city] input").setValue(cardInfo.getCity());
-        String planningDate = generateDate(11);
+        String planningDate = dateGenerator.generateDate(11);
         $("[data-test-id='date'] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
         $("[data-test-id='date'] input").setValue(planningDate);
         $("[data-test-id=name] input").setValue(cardInfo.getName());
@@ -47,7 +39,7 @@ public class CardDeliveryOrderTest {
         $("[data-test-id=success-notification] .notification__content").shouldHave(Condition.text("запланирована на " + planningDate), Duration.ofSeconds(20));
         $("[data-test-id=city] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
         $("[data-test-id=city] input").setValue(cardInfo.getCity());
-        planningDate = generateDate(15);
+        planningDate = dateGenerator.generateDate(15);
         $("[data-test-id='date'] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
         $("[data-test-id='date'] input").setValue(planningDate);
         $("[data-test-id=name] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
