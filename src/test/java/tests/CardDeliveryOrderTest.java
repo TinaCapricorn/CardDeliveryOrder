@@ -2,10 +2,13 @@ package tests;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.logevents.SelenideLogger;
 import com.github.javafaker.Faker;
 import data.CardInfo;
 import data.DateGenerator;
 import data.RegistrationInfo;
+import io.qameta.allure.selenide.AllureSelenide;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
@@ -21,6 +24,16 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 
 public class CardDeliveryOrderTest {
+
+    @BeforeAll
+    static void addListener(){
+        SelenideLogger.addListener("allure", new AllureSelenide());
+    }
+
+    @AfterAll
+    static void removeListener(){
+        SelenideLogger.removeListener("allure");
+    }
 
     DateGenerator dateGenerator = new DateGenerator();
 
